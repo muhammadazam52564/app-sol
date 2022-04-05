@@ -1,0 +1,23 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+.sidebar{
+    background-color: rgb(255, 11, 72);
+    width: 22%;
+    min-height: 100vh;
+    position: absolute;
+}
+.main_area{
+    background-color: rgb(14, 11, 219);
+    width:78%;
+    min-height: 100vh;
+    position: absolute;
+    left: 22%;
+}
+
