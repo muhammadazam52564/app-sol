@@ -213,7 +213,6 @@ class MainController extends Controller{
         try{
             $validator = \Validator::make($request->all(), [
                 'user_id'   => 'bail|required',
-                'file'     => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json([
@@ -230,30 +229,13 @@ class MainController extends Controller{
                         'data' =>  0,
                     ], 200);
                 }else{
-                    $base64_file = $request->file;
-                    if (preg_match('/^data:video\/(\w+);base64,/', $base64_file)){
-                        $data = substr($base64_file, strpos($base64_file, ',') + 1);
-                        $data = base64_decode($data);
-                        $img = preg_replace('/^data:video\/\w+;base64,/', '', $base64_file);
-                        $type = explode(';', $base64_file)[0];
-                        $type = explode('/', $type)[1]; //
-                        if($type == 'mp4' || $type == 'MP4' || $type == 'mov' || $type == 'MOV' || $type == 'wmv' || $type == 'WMV' || $type == 'flv' || $type == 'FLV' || $type == 'avi' || $type == 'AVI' || $type == 'mkv' || $type == 'MKV'){
-                            $videoName = Str::random(10).'.'.$type;
-                            \Storage::disk('post_videos')->put($videoName, $data);
-                            // this disk is defined in config/filesystems.php under Disks section
-                            $video_path = 'post_videos/'.$videoName;
-                        }else{
-                            return response()->json([
-                                'status' => false,
-                                'error' => 'Please Choose a Valid Video!',
-                                'data' =>  0,
-                            ], 400);
-                        }
-                    }else{
-                        return 'Video type invalid';
-                    }
+
+
                     $video = new Video;
-                    $video->url = $video_path;
+                    $newfilename     = time() .'.'. $request->file->getClientOriginalExtension();
+                    // return $newfilename;
+                    $request->file('file')->move(public_path("videos"), $newfilename);
+                    $video->url      = 'videos/'.$newfilename;
                     $video->user_id  = $request->user_id;
                     if($video->save()){
                         return response()->json([
@@ -268,7 +250,7 @@ class MainController extends Controller{
         {
             return response()->json([
                 'status' => false,
-                'message' => $e->getMessage(),
+                'error' => $e->getMessage(),
                 'data' =>  0,
             ], 400);
         }
