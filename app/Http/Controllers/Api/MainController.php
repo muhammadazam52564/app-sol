@@ -277,12 +277,11 @@ class MainController extends Controller{
     public function follow_video(Request $request){
         try
         {
-            // $feed = array();
-            // $followed = array();
-            $people_follow_by_me = follow::where('follow_by', $request->id)->pluck('follow_to');
             // return $people_follow_by_me;
+            // $people_follow_by_me = follow::where('follow_by', $request->id)->pluck('follow_to');
+            // $videos = Video::whereIn('user_id', $people_follow_by_me)->orderBy('id', 'DESC')->get();
 
-            $videos = Video::whereIn('user_id', $people_follow_by_me)->orderBy('id', 'DESC')->get();
+            $videos = Video::orderBy('id', 'DESC')->get();
             return $videos;
 
 
